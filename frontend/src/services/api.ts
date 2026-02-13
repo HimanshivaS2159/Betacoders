@@ -77,4 +77,39 @@ export const getTasteRecommendations = async (tastePreferences: string[], exclud
   }
 };
 
+// Calorie API functions
+export const getCalorieInfo = async (ingredient: string) => {
+  try {
+    console.log('Making request to:', `/calories?ingredient=${ingredient}`);
+    const response = await api.get('/calories', { params: { ingredient } });
+    console.log('API response:', response.data);
+    
+    // Check if API returned an error message within a 200 OK response
+    if (response.data && response.data.error) {
+      throw new Error(response.data.error);
+    }
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching calorie data:', error);
+    // Return a more descriptive error
+    if (error.response) {
+      throw new Error(error.response.data?.error || error.response.data?.message || `Server error: ${error.response.status}`);
+    } else if (error.request) {
+      throw new Error('Network error: No response received from server.');
+    } else {
+      throw new Error(error.message || 'An unexpected error occurred.');
+    }
+  }
+};
+
+export const calculateRecipeCalories = async (ingredients: any[]) => {
+  try {
+    const response = await api.post('/calories/recipe', ingredients);
+    return response.data;
+  } catch (error) {
+    console.error('Error calculating recipe calories:', error);
+    throw error;
+  }
+};
+
 export default api;

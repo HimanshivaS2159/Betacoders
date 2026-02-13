@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChefHat, Beaker, Sparkles, Brain } from 'lucide-react';
+import { ChefHat, Beaker, Sparkles, Brain, Flame } from 'lucide-react';
 import SubstitutionFinder from './components/SubstitutionFinder.tsx';
 import FlavorAnalyzer from './components/FlavorAnalyzer.tsx';
 import SmartAssistant from './components/SmartAssistant.tsx';
+import CalorieAnalyzer from './components/CalorieAnalyzer.tsx';
 import Header from './components/Header.tsx';
 import { Toaster } from 'react-hot-toast';
 
-export type TabType = 'substitution' | 'flavor' | 'assistant';
+export type TabType = 'substitution' | 'flavor' | 'assistant' | 'calories';
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('substitution');
@@ -33,18 +34,26 @@ function App() {
       icon: Brain,
       description: 'AI-powered dietary analysis and recommendations',
       gradient: 'assistant-gradient'
+    },
+    {
+      id: 'calories' as TabType,
+      label: 'Calorie Calculator',
+      icon: Flame,
+      description: 'Calculate calories and nutritional information',
+      gradient: 'calorie-gradient'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
       <Toaster 
         position="top-right"
         toastOptions={{
           style: {
-            background: 'rgba(255, 255, 255, 0.9)',
+            background: 'rgba(0, 0, 0, 0.9)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
+            border: '1px solid rgba(251, 146, 60, 0.3)',
+            color: 'white',
           },
         }}
       />
@@ -61,7 +70,7 @@ function App() {
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
             FlavoursVerse
           </h1>
-          <p className="text-xl text-white/80 mb-8">
+          <p className="text-xl text-orange-400 mb-8">
             Your Culinary Intelligence Companion
           </p>
           
@@ -77,7 +86,7 @@ function App() {
                   className={`relative px-8 py-4 rounded-2xl font-medium transition-all duration-300 ${
                     activeTab === tab.id
                       ? 'text-white shadow-2xl'
-                      : 'text-white/70 hover:text-white'
+                      : 'text-gray-400 hover:text-orange-400'
                   }`}
                 >
                   {activeTab === tab.id && (
@@ -100,7 +109,7 @@ function App() {
             key={activeTab}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-white/60 max-w-md mx-auto"
+            className="text-gray-400 max-w-md mx-auto"
           >
             {tabs.find(tab => tab.id === activeTab)?.description}
           </motion.p>
@@ -113,17 +122,20 @@ function App() {
           transition={{ duration: 0.4 }}
           className="max-w-4xl mx-auto"
         >
-          {activeTab === 'substitution' ? <SubstitutionFinder /> : activeTab === 'flavor' ? <FlavorAnalyzer /> : <SmartAssistant />}
+          {activeTab === 'substitution' ? <SubstitutionFinder /> : 
+           activeTab === 'flavor' ? <FlavorAnalyzer /> : 
+           activeTab === 'assistant' ? <SmartAssistant /> : 
+           <CalorieAnalyzer />}
         </motion.div>
       </main>
       
-      <footer className="mt-16 pb-8 text-center text-white/60">
+      <footer className="mt-16 pb-8 text-center text-gray-400">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <Sparkles size={16} />
-          <span>Powered by Culinary AI</span>
-          <Sparkles size={16} />
+          <Sparkles size={16} className="text-orange-400" />
+          <span className="text-white">Powered by Culinary AI</span>
+          <Sparkles size={16} className="text-orange-400" />
         </div>
-        <p className="text-sm">
+        <p className="text-sm text-gray-500">
           Discover the art of flavor science
         </p>
       </footer>

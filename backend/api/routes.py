@@ -1,7 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Body
 from services.substitution import get_substitution
 from services.flavordb_service import get_flavor_data
 from services.nlp_service import parse_user_query, get_smart_suggestions, analyze_ingredients_for_allergies, get_taste_based_recommendations
+from services.calorie_service import get_calorie_data, calculate_recipe_calories
 
 router = APIRouter()
 
@@ -34,3 +35,13 @@ def allergy_check(ingredients: list, user_allergies: list):
 def taste_recommendations(taste_preferences: list, exclude_allergies: list = None):
     """Get recommendations based on taste preferences"""
     return get_taste_based_recommendations(taste_preferences, exclude_allergies)
+
+@router.get("/calories")
+def calories(ingredient: str):
+    """Get calorie information for an ingredient"""
+    return get_calorie_data(ingredient)
+
+@router.post("/calories/recipe")
+def recipe_calories(ingredients: list = Body(...)):
+    """Calculate total calories for a recipe"""
+    return calculate_recipe_calories(ingredients)

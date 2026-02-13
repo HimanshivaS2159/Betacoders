@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Search, ChefHat, AlertCircle, CheckCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, ChefHat, AlertCircle, CheckCircle, Clock, TrendingUp, Filter, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getSubstitution } from '../services/api.ts';
 
@@ -14,8 +14,11 @@ const SubstitutionFinder: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<SubstitutionResult[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState<'score' | 'name'>('score');
 
-  const handleSearch = async (e: React.FormEvent) => {
+  const handleSearch: React.FormEventHandler<HTMLFormElement> = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (!ingredient.trim()) {
@@ -28,26 +31,52 @@ const SubstitutionFinder: React.FC = () => {
     setResults([]);
 
     try {
-      const data = await getSubstitution(ingredient.trim());
-      
+      const data = await getSubstitution(ingredient);
       if (data.error) {
         setError(data.error);
         toast.error(data.error);
-      } else if (Array.isArray(data) && data.length > 0) {
-        setResults(data);
-        toast.success(`Found ${data.length} substitutes for ${ingredient}`);
       } else {
-        setError('No substitutes found');
-        toast.error('No substitutes found for this ingredient');
+        let sortedResults = Array.isArray(data) ? data : data.substitutes || [];
+        
+        // Sort results based on selected criteria
+        if (sortBy === 'score') {
+          sortedResults.sort((a, b) => b.score - a.score);
+        } else {
+          sortedResults.sort((a, b) => a.ingredient.localeCompare(b.ingredient));
+        }
+        
+        setResults(sortedResults);
+        
+        // Add to search history
+        if (!searchHistory.includes(ingredient.toLowerCase())) {
+          setSearchHistory(prev => [ingredient.toLowerCase(), ...prev.slice(0, 9)]);
+        }
+        
+        if (sortedResults.length > 0) {
+          toast.success(`Found ${sortedResults.length} substitutes for ${ingredient}`);
+        }
       }
-    } catch (err) {
-      const errorMessage = 'Failed to fetch substitutes. Please try again.';
-      setError(errorMessage);
-      toast.error(errorMessage);
+    } catch (error) {
+      toast.error('Failed to fetch substitutions');
+      setError('Failed to fetch substitutions');
     } finally {
       setLoading(false);
     }
   };
+
+  const clearHistory = () => {
+    setSearchHistory([]);
+    toast.success('Search history cleared');
+  };
+
+  const loadFromHistory = (item: string) => {
+    setIngredient(item);
+  };
+
+  const getPopularIngredients = () => [
+    'milk', 'butter', 'cheese', 'eggs', 'flour', 'sugar', 'dairy',
+    'chicken', 'beef', 'rice', 'pasta', 'broccoli', 'tomato', 'onion', 'garlic'
+  ];
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-400';
