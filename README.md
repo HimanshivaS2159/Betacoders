@@ -26,6 +26,8 @@
 - Framer Motion: Smooth transitions and micro-interactions
 - Glassmorphism: Modern blur effects with transparency
 
+![Flavour Verse - Ingredient Substitution Interface](image.png)
+
 ### Core Functionality
 - Flavor Analysis: Scientific taste breakdown with 6-point flavor profiles
 - Ingredient Substitution: Smart recommendations for ingredient replacements
