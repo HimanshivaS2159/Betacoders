@@ -27,9 +27,6 @@ const Header: React.FC = () => {
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               <span className="text-green-400 text-sm font-medium">Live</span>
             </div>
-            <div className="px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20">
-              <span className="text-orange-400 text-sm font-medium">AI Powered</span>
-            </div>
           </nav>
         </div>
       </div>
