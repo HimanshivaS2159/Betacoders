@@ -93,8 +93,8 @@ const SubstitutionFinder: React.FC = () => {
   return (
     <div className="card animate-fade-in">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-500/10 rounded-full mb-4">
-          <ChefHat className="text-indigo-400" size={32} />
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-500/10 rounded-full mb-4">
+          <ChefHat className="text-orange-400" size={32} />
         </div>
         <h2 className="text-3xl font-bold text-white mb-2">
           Ingredient Substitution
@@ -144,7 +144,7 @@ const SubstitutionFinder: React.FC = () => {
 
       {results.length === 0 && !loading && !error && (
         <div className="glass-light rounded-xl p-6 mb-6">
-          <p className="text-indigo-400 font-medium mb-4 flex items-center gap-2">
+          <p className="text-orange-400 font-medium mb-4 flex items-center gap-2">
             <span className="text-lg">💡</span>
             Try these popular ingredients:
           </p>
@@ -153,7 +153,7 @@ const SubstitutionFinder: React.FC = () => {
               <button
                 key={ing}
                 onClick={() => setIngredient(ing)}
-                className="px-3 py-1 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 rounded-lg text-sm font-medium transition-colors duration-200 border border-indigo-500/20"
+                className="px-3 py-1 bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 rounded-lg text-sm font-medium transition-colors duration-200 border border-orange-500/20"
               >
                 {ing}
               </button>
@@ -185,7 +185,7 @@ const SubstitutionFinder: React.FC = () => {
           {results.map((result, index) => (
             <div
               key={index}
-              className="card hover:border-indigo-500/50 animate-slide-in"
+              className="card hover:border-orange-500/50 animate-slide-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="flex items-center justify-between">

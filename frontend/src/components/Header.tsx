@@ -9,7 +9,7 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <ChefHat className="text-indigo-400" size={32} />
+              <ChefHat className="text-orange-400" size={32} />
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
             </div>
             <div>
@@ -27,8 +27,8 @@ const Header: React.FC = () => {
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               <span className="text-green-400 text-sm font-medium">Live</span>
             </div>
-            <div className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20">
-              <span className="text-indigo-400 text-sm font-medium">AI Powered</span>
+            <div className="px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20">
+              <span className="text-orange-400 text-sm font-medium">AI Powered</span>
             </div>
           </nav>
         </div>

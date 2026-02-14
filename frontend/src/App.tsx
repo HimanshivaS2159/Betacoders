@@ -85,8 +85,8 @@ function App() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`relative px-6 py-3 rounded-xl font-semibold transition-all duration-300 text-sm md:text-base ${
                     activeTab === tab.id
-                      ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
+                      ? 'bg-gradient-to-r from-orange-400 to-orange-600 text-white shadow-lg'
+                      : 'bg-gray-900 text-gray-300 hover:bg-gray-800 border border-gray-700'
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -119,9 +119,9 @@ function App() {
       
       <footer className="mt-24 pb-12 text-center text-gray-500 relative z-10">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <Sparkles size={16} className="text-indigo-400" />
+          <Sparkles size={16} className="text-orange-400" />
           <span className="text-gray-400 font-medium">Powered by Culinary AI</span>
-          <Sparkles size={16} className="text-indigo-400" />
+          <Sparkles size={16} className="text-orange-400" />
         </div>
         <p className="text-sm text-gray-600">
           Discover the art of flavor science
