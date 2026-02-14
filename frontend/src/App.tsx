@@ -45,45 +45,63 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+    <div className="min-h-screen relative">
       <Toaster 
         position="top-right"
         toastOptions={{
           style: {
-            background: 'rgba(0, 0, 0, 0.9)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(251, 146, 60, 0.3)',
+            background: 'rgba(15, 23, 42, 0.95)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(251, 146, 60, 0.2)',
             color: 'white',
+            borderRadius: '12px',
+            fontSize: '14px',
+            fontWeight: '500'
           },
         }}
       />
       
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-12 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="text-center mb-16"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+          <motion.div
+            animate={{ 
+              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+            className="text-6xl md:text-7xl font-black mb-6 text-gradient"
+            style={{ backgroundSize: '200% 200%' }}
+          >
             Flavour Verse
-          </h1>
-          <p className="text-xl text-orange-400 mb-8">
+          </motion.div>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="text-2xl text-orange-400 mb-12 font-light tracking-wide"
+          >
             Your Culinary Intelligence Companion
-          </p>
+          </motion.p>
           
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
-            {tabs.map((tab) => {
+          <div className="flex flex-wrap justify-center gap-4 mb-12 px-4">
+            {tabs.map((tab, index) => {
               const Icon = tab.icon;
               return (
                 <motion.button
                   key={tab.id}
-                  whileHover={{ scale: 1.05 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 * index, duration: 0.5 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`relative px-8 py-4 rounded-2xl font-medium transition-all duration-300 ${
+                  className={`relative px-6 py-4 rounded-2xl font-semibold transition-all duration-300 hover-lift text-sm md:text-base md:px-8 md:py-5 ${
                     activeTab === tab.id
                       ? 'text-white shadow-2xl'
                       : 'text-gray-400 hover:text-orange-400'
@@ -92,13 +110,18 @@ function App() {
                   {activeTab === tab.id && (
                     <motion.div
                       layoutId="activeTab"
-                      className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} rounded-2xl`}
+                      className={`absolute inset-0 bg-gradient-to-r ${tab.gradient} rounded-2xl glow`}
                       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
-                  <div className="relative flex items-center gap-3">
-                    <Icon size={24} />
-                    <span className="text-lg">{tab.label}</span>
+                  <div className="relative flex items-center gap-2 md:gap-3">
+                    <motion.div
+                      animate={{ rotate: activeTab === tab.id ? 360 : 0 }}
+                      transition={{ duration: 0.6, ease: 'easeInOut' }}
+                    >
+                      <Icon size={20} className="md:size-24" />
+                    </motion.div>
+                    <span className="text-sm md:text-lg">{tab.label}</span>
                   </div>
                 </motion.button>
               );
@@ -109,7 +132,8 @@ function App() {
             key={activeTab}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-gray-400 max-w-md mx-auto"
+            transition={{ duration: 0.4 }}
+            className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto font-light leading-relaxed px-4"
           >
             {tabs.find(tab => tab.id === activeTab)?.description}
           </motion.p>
@@ -119,8 +143,8 @@ function App() {
           key={activeTab}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
-          className="max-w-4xl mx-auto"
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="max-w-5xl mx-auto px-4"
         >
           {activeTab === 'substitution' ? <SubstitutionFinder /> : 
            activeTab === 'flavor' ? <FlavorAnalyzer /> : 
@@ -129,15 +153,35 @@ function App() {
         </motion.div>
       </main>
       
-      <footer className="mt-16 pb-8 text-center text-gray-400">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <Sparkles size={16} className="text-orange-400" />
-          <span className="text-white">Powered by Culinary AI</span>
-          <Sparkles size={16} className="text-orange-400" />
-        </div>
-        <p className="text-sm text-gray-500">
+      <footer className="mt-24 pb-12 text-center text-gray-400 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="flex items-center justify-center gap-3 mb-4"
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+          >
+            <Sparkles size={20} className="text-orange-400" />
+          </motion.div>
+          <span className="text-white text-lg font-medium">Powered by Culinary AI</span>
+          <motion.div
+            animate={{ rotate: -360 }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+          >
+            <Sparkles size={20} className="text-orange-400" />
+          </motion.div>
+        </motion.div>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7, duration: 0.6 }}
+          className="text-gray-500 text-sm font-light"
+        >
           Discover the art of flavor science
-        </p>
+        </motion.p>
       </footer>
     </div>
   );

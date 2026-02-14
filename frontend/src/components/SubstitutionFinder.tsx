@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ChefHat, AlertCircle, CheckCircle, Clock, TrendingUp, Filter, Star } from 'lucide-react';
+import { Search, ChefHat, AlertCircle, CheckCircle, Clock, TrendingUp, Filter, Star, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getSubstitution } from '../services/api.ts';
 
@@ -40,9 +40,9 @@ const SubstitutionFinder: React.FC = () => {
         
         // Sort results based on selected criteria
         if (sortBy === 'score') {
-          sortedResults.sort((a, b) => b.score - a.score);
+          sortedResults.sort((a: SubstitutionResult, b: SubstitutionResult) => b.score - a.score);
         } else {
-          sortedResults.sort((a, b) => a.ingredient.localeCompare(b.ingredient));
+          sortedResults.sort((a: SubstitutionResult, b: SubstitutionResult) => a.ingredient.localeCompare(b.ingredient));
         }
         
         setResults(sortedResults);
@@ -92,48 +92,64 @@ const SubstitutionFinder: React.FC = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="glass-effect rounded-3xl p-8 shadow-2xl"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
+      className="glass-effect rounded-3xl p-6 md:p-10 shadow-2xl hover-lift"
     >
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 md:mb-10">
         <motion.div
-          whileHover={{ rotate: 360 }}
-          transition={{ duration: 0.6 }}
-          className="inline-block mb-4"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+          className="inline-block mb-4 md:mb-6"
         >
-          <ChefHat className="text-white" size={48} />
+          <div className="relative">
+            <ChefHat className="text-white md:size-56" size={40} />
+            <motion.div
+              animate={{ scale: [1, 1.3, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute -top-1 -right-1"
+            >
+              <Sparkles className="text-yellow-300 md:size-20" size={16} />
+            </motion.div>
+          </div>
         </motion.div>
-        <h2 className="text-3xl font-bold text-white mb-2">
+        <h2 className="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-3">
           Ingredient Substitution
         </h2>
-        <p className="text-white/70">
+        <p className="text-white/70 text-sm md:text-lg font-light">
           Find the perfect substitutes for any ingredient
         </p>
       </div>
 
-      <form onSubmit={handleSearch} className="mb-8">
-        <div className="relative">
+      <form onSubmit={handleSearch} className="mb-8 md:mb-10">
+        <div className="relative group">
           <input
             type="text"
             value={ingredient}
             onChange={(e) => setIngredient(e.target.value)}
             placeholder="Enter an ingredient (e.g., milk, butter, cheese, eggs, flour, sugar)..."
-            className="w-full px-6 py-4 pr-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all duration-300"
+            className="w-full px-6 py-4 md:px-8 md:py-5 pr-12 md:pr-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-400/50 focus:border-transparent transition-all duration-300 text-base md:text-lg font-light"
             disabled={loading}
           />
-          <Search
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/50"
-            size={24}
-          />
+          <motion.div
+            animate={{ rotate: loading ? 360 : 0 }}
+            transition={{ duration: 1, repeat: loading ? Infinity : 0, ease: 'linear' }}
+            className="absolute right-4 md:right-5 top-1/2 transform -translate-y-1/2"
+          >
+            <Search
+              className={`text-white/50 ${loading ? 'text-orange-400' : ''} md:size-28`}
+              size={20}
+            />
+          </motion.div>
         </div>
         
         <motion.button
           type="submit"
-          whileHover={{ scale: 1.02 }}
+          whileHover={{ scale: 1.02, y: -2 }}
           whileTap={{ scale: 0.98 }}
           disabled={loading}
-          className="w-full mt-4 px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+          className="w-full mt-4 md:mt-6 px-6 py-4 md:px-8 md:py-5 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-base md:text-lg glow"
         >
           {loading ? (
             <>
@@ -142,7 +158,7 @@ const SubstitutionFinder: React.FC = () => {
             </>
           ) : (
             <>
-              <Search size={20} />
+              <Search size={20} className="md:size-24" />
               <span>Find Substitutes</span>
             </>
           )}
@@ -151,22 +167,29 @@ const SubstitutionFinder: React.FC = () => {
 
       {results.length === 0 && !loading && !error && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mb-6 p-4 bg-blue-500/20 border border-blue-400/30 rounded-xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-6 md:mb-8 p-4 md:p-6 bg-blue-500/20 border border-blue-400/30 rounded-2xl"
         >
-          <p className="text-blue-200 text-sm font-medium mb-2">
-            💡 Try these ingredients:
+          <p className="text-blue-200 text-base md:text-lg font-medium mb-3 md:mb-4 flex items-center gap-2">
+            <span className="text-xl md:text-2xl">💡</span>
+            Try these popular ingredients:
           </p>
-          <div className="flex flex-wrap gap-2">
-            {['milk', 'butter', 'cheese', 'eggs', 'flour', 'sugar', 'dairy'].map((ing) => (
-              <button
+          <div className="flex flex-wrap gap-2 md:gap-3">
+            {['milk', 'butter', 'cheese', 'eggs', 'flour', 'sugar', 'dairy'].map((ing, index) => (
+              <motion.button
                 key={ing}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1, duration: 0.3 }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setIngredient(ing)}
-                className="px-3 py-1 bg-blue-500/30 hover:bg-blue-500/40 text-blue-200 rounded-lg text-sm transition-colors duration-200"
+                className="px-3 py-2 md:px-4 md:py-2 bg-blue-500/30 hover:bg-blue-500/40 text-blue-200 rounded-xl text-xs md:text-sm font-medium transition-all duration-200 hover-lift"
               >
                 {ing}
-              </button>
+              </motion.button>
             ))}
           </div>
         </motion.div>
@@ -174,12 +197,18 @@ const SubstitutionFinder: React.FC = () => {
 
       {error && (
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 p-4 bg-red-500/20 border border-red-400/30 rounded-xl flex items-center gap-3"
+          initial={{ opacity: 0, y: -10, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          className="mb-6 md:mb-8 p-4 md:p-6 bg-red-500/20 border border-red-400/30 rounded-2xl flex items-center gap-3 md:gap-4"
         >
-          <AlertCircle className="text-red-400" size={20} />
-          <p className="text-red-200">{error}</p>
+          <motion.div
+            animate={{ rotate: [0, 10, -10, 0] }}
+            transition={{ duration: 0.5, repeat: 2 }}
+          >
+            <AlertCircle className="text-red-400 md:size-24" size={20} />
+          </motion.div>
+          <p className="text-red-200 text-base md:text-lg font-medium">{error}</p>
         </motion.div>
       )}
 
@@ -187,39 +216,58 @@ const SubstitutionFinder: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
+          transition={{ duration: 0.5 }}
+          className="space-y-6"
         >
-          <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-            <CheckCircle className="text-green-400" size={24} />
-            Found {results.length} Substitutes
-          </h3>
+          <motion.div 
+            className="flex items-center gap-3 mb-6"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <motion.div
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <CheckCircle className="text-green-400" size={32} />
+            </motion.div>
+            <h3 className="text-2xl font-bold text-white">
+              Found {results.length} Substitutes
+            </h3>
+          </motion.div>
           
           {results.map((result, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-all duration-300"
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 md:p-8 hover:bg-white/15 transition-all duration-300 hover-lift"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-xl font-semibold text-white mb-1">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="flex-1">
+                  <h4 className="text-lg md:text-2xl font-bold text-white mb-1 md:mb-2">
                     {result.ingredient}
                   </h4>
-                  <p className="text-white/60 text-sm">
+                  <p className="text-white/60 text-sm md:text-base font-medium">
                     {getScoreLabel(result.score)}
                   </p>
                 </div>
                 <div className="text-right">
-                  <div className={`text-2xl font-bold ${getScoreColor(result.score)}`}>
+                  <motion.div 
+                    className={`text-2xl md:text-3xl font-bold ${getScoreColor(result.score)}`}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: index * 0.1 + 0.3, duration: 0.5, type: 'spring' }}
+                  >
                     {result.score}%
-                  </div>
-                  <div className="w-24 h-2 bg-white/20 rounded-full overflow-hidden mt-2">
+                  </motion.div>
+                  <div className="w-24 md:w-32 h-2 md:h-3 bg-white/20 rounded-full overflow-hidden mt-2 md:mt-3">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${result.score}%` }}
-                      transition={{ delay: index * 0.1 + 0.2, duration: 0.8 }}
+                      transition={{ delay: index * 0.1 + 0.4, duration: 0.8, ease: 'easeOut' }}
                       className={`h-full rounded-full ${
                         result.score >= 80 ? 'bg-green-400' :
                         result.score >= 60 ? 'bg-yellow-400' : 'bg-orange-400'
