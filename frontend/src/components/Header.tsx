@@ -24,7 +24,7 @@ const Header: React.FC = () => {
               />
             </div>
             <h1 className="text-2xl font-bold text-white">
-              FlavoursVerse
+              Flavour Verse
             </h1>
           </motion.div>
           

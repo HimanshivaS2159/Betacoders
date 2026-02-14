@@ -68,7 +68,7 @@ function App() {
           className="text-center mb-12"
         >
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
-            FlavoursVerse
+            Flavour Verse
           </h1>
           <p className="text-xl text-orange-400 mb-8">
             Your Culinary Intelligence Companion
