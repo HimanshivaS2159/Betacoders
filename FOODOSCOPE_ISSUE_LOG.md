@@ -171,17 +171,185 @@ Needs implementation of proper HTTP status codes in backend services.
 
 ---
 
+### Issue #004 - Rate Limiting Not Implemented
+**Date:** 2026-02-15  
+**Endpoint:** `/api/v1/*`  
+**Severity:** High  
+**Status:** Identified  
+**Category:** Performance  
+
+**Description:**
+API endpoints lack rate limiting protection, making them vulnerable to abuse and potential DoS attacks.
+
+**Request Payload:**
+```javascript
+// Rapid successive calls:
+for(let i = 0; i < 1000; i++) {
+  await api.get('/api/v1/substitute', { params: { ingredient: 'test' } });
+}
+```
+
+**Response Received:**
+```json
+// All requests succeed (vulnerability):
+{
+  "substitutes": [...]
+}
+```
+
+**Expected Behavior:**
+Should implement rate limiting (e.g., 100 requests/minute) and return 429 status when exceeded.
+
+**Actual Behavior:**
+Unlimited requests allowed, potential for service abuse.
+
+**Root Cause Analysis:**
+Missing rate limiting middleware in FastAPI application.
+
+**Resolution:**
+Implement slowapi middleware for rate limiting with proper HTTP 429 responses.
+
+---
+
+### Issue #005 - Inconsistent Response Formats
+**Date:** 2026-02-15  
+**Endpoint:** `/api/v1/flavor` vs `/api/v1/substitute`  
+**Severity:** Medium  
+**Status:** Identified  
+**Category:** Standards  
+
+**Description:**
+Different endpoints return different response formats, making frontend error handling inconsistent.
+
+**Request Payload:**
+```javascript
+// Flavor endpoint:
+await api.get('/api/v1/flavor', { params: { ingredient: 'lemon' } });
+
+// Substitute endpoint:
+await api.get('/api/v1/substitute', { params: { ingredient: 'milk' } });
+```
+
+**Response Received:**
+```json
+// Flavor endpoint response:
+{
+  "ingredient": "lemon",
+  "profiles": { "sour": 0.8, "sweet": 0.2 },
+  "pairings": ["herbs", "fatty"]
+}
+
+// Substitute endpoint response:
+{
+  "substitutes": [
+    { "ingredient": "coconut oil", "score": 88 },
+    { "ingredient": "olive oil", "score": 75 }
+  ]
+}
+```
+
+**Expected Behavior:**
+All endpoints should follow consistent response format with standard error handling.
+
+**Actual Behavior:**
+Inconsistent response structures make frontend parsing complex.
+
+**Root Cause Analysis:**
+Each service implements its own response format without unified standard.
+
+**Resolution:**
+Create standardized response models and error format across all endpoints.
+
+---
+
+### Issue #006 - Missing API Documentation
+**Date:** 2026-02-15  
+**Endpoint:** `/api/v1/nlp/*`  
+**Severity:** Medium  
+**Status:** Identified  
+**Category:** Documentation  
+
+**Description:**
+NLP endpoints lack comprehensive documentation in OpenAPI spec, making integration difficult.
+
+**Request Payload:**
+```javascript
+// Unclear parameters:
+await api.post('/api/v1/nlp/parse', null, { params: { query: 'spicy asian vegetarian' } });
+```
+
+**Response Received:**
+```json
+// Unexpected response format:
+{
+  "parsed": { "diet": "vegetarian", "spice": "high" },
+  "confidence": 0.85
+}
+```
+
+**Expected Behavior:**
+Clear parameter documentation with examples and expected response formats.
+
+**Actual Behavior:**
+Developers must reverse-engineer API behavior through trial and error.
+
+**Root Cause Analysis:**
+Missing detailed OpenAPI documentation for NLP endpoints.
+
+**Resolution:**
+Add comprehensive request/response examples in FastAPI route decorators.
+
+---
+
+### Issue #007 - Authentication & Security Headers Missing
+**Date:** 2026-02-15  
+**Endpoint:** All endpoints  
+**Severity:** High  
+**Status:** Identified  
+**Category:** Security  
+
+**Description:**
+API lacks authentication mechanism and security headers for production use.
+
+**Request Payload:**
+```javascript
+// No authentication:
+await api.get('/api/v1/substitute', { params: { ingredient: 'premium_ingredient' } });
+```
+
+**Response Received:**
+```json
+// No rate limiting or access control:
+{
+  "substitutes": ["premium_data"]
+}
+```
+
+**Expected Behavior:**
+Should implement API key authentication and rate limiting for premium features.
+
+**Actual Behavior:**
+All endpoints publicly accessible with no access control.
+
+**Root Cause Analysis:**
+Missing authentication middleware and security headers configuration.
+
+**Resolution:**
+Implement API key authentication, rate limiting, and security headers (CSP, HSTS, etc.).
+
+---
+
 ---
 
 ## 📊 Statistics
 
-- **Total Issues Logged:** 3
+- **Total Issues Logged:** 7
 - **Critical Issues:** 0
-- **High Priority:** 1  
-- **Medium Priority:** 2  
-- **Low Priority:** 0
-- **Resolved Issues:** 2
-- **Open Issues:** 1
+- **High Priority:** 2  
+- **Medium Priority:** 4  
+- **Low Priority:** 1
+- **Resolved Issues:** 3
+- **Open Issues:** 4
 
 ## 🏆 Top Contributors (Top 5 Teams)
 1. *Awaiting contributions...*
