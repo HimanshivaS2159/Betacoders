@@ -12,7 +12,7 @@ const api = axios.create({
 
 export const getSubstitution = async (ingredient: string) => {
   try {
-    const response = await api.get('/substitute', { params: { ingredient } });
+    const response = await api.get('/api/v1/substitute', { params: { ingredient } });
     return response.data;
   } catch (error) {
     console.error('Error fetching substitutes:', error);
@@ -22,7 +22,7 @@ export const getSubstitution = async (ingredient: string) => {
 
 export const getFlavorData = async (ingredient: string) => {
   try {
-    const response = await api.get('/flavor', { params: { ingredient } });
+    const response = await api.get('/api/v1/flavor', { params: { ingredient } });
     return response.data;
   } catch (error) {
     console.error('Error fetching flavor data:', error);
@@ -33,7 +33,7 @@ export const getFlavorData = async (ingredient: string) => {
 // NLP API functions
 export const analyzeQuery = async (query: string) => {
   try {
-    const response = await api.post('/nlp/parse', null, { params: { query } });
+    const response = await api.post('/api/v1/nlp/parse', null, { params: { query } });
     return response.data;
   } catch (error) {
     console.error('Error analyzing query:', error);
@@ -43,7 +43,7 @@ export const analyzeQuery = async (query: string) => {
 
 export const getSmartSuggestions = async (query: string) => {
   try {
-    const response = await api.post('/nlp/suggestions', null, { params: { query } });
+    const response = await api.post('/api/v1/nlp/suggestions', null, { params: { query } });
     return response.data;
   } catch (error) {
     console.error('Error getting smart suggestions:', error);
@@ -53,7 +53,7 @@ export const getSmartSuggestions = async (query: string) => {
 
 export const checkAllergies = async (ingredients: string[], userAllergies: string[]) => {
   try {
-    const response = await api.post('/nlp/allergy-check', {
+    const response = await api.post('/api/v1/nlp/allergy-check', {
       ingredients,
       user_allergies: userAllergies
     });
@@ -66,7 +66,7 @@ export const checkAllergies = async (ingredients: string[], userAllergies: strin
 
 export const getTasteRecommendations = async (tastePreferences: string[], excludeAllergies?: string[]) => {
   try {
-    const response = await api.post('/nlp/taste-recommendations', {
+    const response = await api.post('/api/v1/nlp/taste-recommendations', {
       taste_preferences: tastePreferences,
       exclude_allergies: excludeAllergies
     });
@@ -80,8 +80,8 @@ export const getTasteRecommendations = async (tastePreferences: string[], exclud
 // Calorie API functions
 export const getCalorieInfo = async (ingredient: string) => {
   try {
-    console.log('Making request to:', `/calories?ingredient=${ingredient}`);
-    const response = await api.get('/calories', { params: { ingredient } });
+    console.log('Making request to:', `/api/v1/calories?ingredient=${ingredient}`);
+    const response = await api.get('/api/v1/calories', { params: { ingredient } });
     console.log('API response:', response.data);
     
     // Check if API returned an error message within a 200 OK response
@@ -104,7 +104,7 @@ export const getCalorieInfo = async (ingredient: string) => {
 
 export const calculateRecipeCalories = async (ingredients: any[]) => {
   try {
-    const response = await api.post('/calories/recipe', ingredients);
+    const response = await api.post('/api/v1/calories/recipe', ingredients);
     return response.data;
   } catch (error) {
     console.error('Error calculating recipe calories:', error);
