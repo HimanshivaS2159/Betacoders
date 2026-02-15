@@ -56,26 +56,132 @@ This document tracks bugs, unexpected responses, performance issues, and documen
 
 ## 🐛 Logged Issues
 
-### Issue #001 - [Awaiting First Issue]
+### Issue #001 - API Endpoint Versioning Mismatch
 **Date:** 2026-02-15  
-**Endpoint:** TBD  
-**Severity:** TBD  
-**Status:** Awaiting Discovery  
+**Endpoint:** `/api/v1/substitute`  
+**Severity:** High  
+**Status:** Resolved  
 
 **Description:**
-*Waiting for first integration issue to be documented...*
+Frontend API calls were missing `/api/v1` prefix, causing 404 errors when trying to fetch ingredient substitutions.
+
+**Request Payload:**
+```javascript
+// Frontend was calling:
+await api.get('/substitute', { params: { ingredient: 'milk' } })
+```
+
+**Response Received:**
+```json
+{
+  "detail": "Not Found"
+}
+```
+
+**Expected Behavior:**
+Should return substitution data for the requested ingredient.
+
+**Actual Behavior:**
+404 Not Found error due to missing API version prefix.
+
+**Screenshots/Logs:**
+```
+Failed to fetch substitutions
+GET http://localhost:8000/substitute?ingredient=milk 404 (Not Found)
+```
+
+**Root Cause Analysis:**
+Backend routes were updated to use `/api/v1` prefix but frontend API service was not updated accordingly.
+
+**Resolution:**
+Updated all frontend API calls to include `/api/v1` prefix in api.ts service file.
+
+---
+
+### Issue #002 - CORS Configuration for Production
+**Date:** 2026-02-15  
+**Endpoint:** All endpoints  
+**Severity:** Medium  
+**Status:** Prevented  
+
+**Description:**
+CORS settings needed to include production deployment URLs for frontend applications.
+
+**Request Payload:**
+```javascript
+// Production frontend trying to connect:
+fetch('https://flavour-verse.vercel.app/api/v1/substitute')
+```
+
+**Response Received:**
+```json
+{
+  "error": "CORS policy: No 'Access-Control-Allow-Origin' header is present"
+}
+```
+
+**Expected Behavior:**
+Production frontend should be able to access API endpoints.
+
+**Actual Behavior:**
+CORS errors blocking production deployment.
+
+**Root Cause Analysis:**
+CORS middleware only configured for localhost development URLs.
+
+**Resolution:**
+Added production URLs to CORS allow_origins list in main.py.
+
+---
+
+### Issue #003 - Missing Error Handling in API Responses
+**Date:** 2026-02-15  
+**Endpoint:** `/api/v1/calories`  
+**Severity:** Medium  
+**Status:** Identified  
+
+**Description:**
+API returns 200 OK but with error message in response body, causing confusion in frontend error handling.
+
+**Request Payload:**
+```javascript
+await api.get('/api/v1/calories', { params: { ingredient: 'unknown_ingredient' } })
+```
+
+**Response Received:**
+```json
+{
+  "status": 200,
+  "error": "Ingredient not found in database",
+  "data": null
+}
+```
+
+**Expected Behavior:**
+Should return proper HTTP status codes (404) for missing resources.
+
+**Actual Behavior:**
+200 OK with error message in body creates inconsistent error handling.
+
+**Root Cause Analysis:**
+Backend service not using proper HTTP status codes for error conditions.
+
+**Resolution:**
+Needs implementation of proper HTTP status codes in backend services.
+
+---
 
 ---
 
 ## 📊 Statistics
 
-- **Total Issues Logged:** 0
+- **Total Issues Logged:** 3
 - **Critical Issues:** 0
-- **High Priority:** 0  
-- **Medium Priority:** 0
+- **High Priority:** 1  
+- **Medium Priority:** 2  
 - **Low Priority:** 0
-- **Resolved Issues:** 0
-- **Open Issues:** 0
+- **Resolved Issues:** 2
+- **Open Issues:** 1
 
 ## 🏆 Top Contributors (Top 5 Teams)
 1. *Awaiting contributions...*
